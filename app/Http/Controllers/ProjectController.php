@@ -16,13 +16,26 @@ class ProjectController extends Controller
     public function index()
     {
         $query = Project::query();
-    
+
+        $sortField = request('sort_field', 'created_at');
+        $sortDirection = request('sort_direction', 'desc');
+        
+        
+        if (request("name")) {
+            $query->where("name","like","%". request("name") ."%");
+        }
+        if (request("status")) {
+            $query->where("status", request("status"));
+        }
         // Paginate the projects
-        $projects = $query->paginate(10);
+        $projects = $query->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
+
     
         // Return the paginated projects and pagination metadata
         return inertia("project/Index", [
-            "projects" => ProjectResource::collection($projects->items()), // Transform paginated items
+            "projects" => ProjectResource::collection($projects->items()), 
+            // Transform paginated items
+            'queryparams'=> request()->query() ?: null,
            
         ]);
     }
@@ -59,7 +72,7 @@ class ProjectController extends Controller
         // Show a single project using the ProjectResource
         return inertia("project/Show", [
             "project" => new ProjectResource($project), // Transform single project
-        ]);
+        ]); 
     }
 
     /**

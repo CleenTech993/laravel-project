@@ -1,4 +1,4 @@
-import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constant.jsx";
+import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constant.jsx";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
@@ -9,7 +9,7 @@ import SelectInput from "@/Components/SelectInput";
 
   // Assuming Pagination is a valid component
 
-export default function Index({ auth, projects, pagination, errors, queryparams =null }) {
+export default function Index({ auth, tasks, pagination, errors, queryparams =null }) {
     queryparams =queryparams || {}
 
     const searchFieldChange = (name, value) => {
@@ -20,7 +20,7 @@ export default function Index({ auth, projects, pagination, errors, queryparams 
         }
 
 
-        route.get(route('project.index'), queryparams)
+        route.get(route('task.index'), queryparams)
     }
 
 const onKeyPress = (name, e)=> {
@@ -36,16 +36,16 @@ const onKeyPress = (name, e)=> {
        
         }
     }
-    route.get(route('project.index'), queryparams)
+    route.get(route('task.index'), queryparams)
 }
 
     return (
         <AuthenticatedLayout
             auth={auth}
             errors={errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Projects</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Tasks</h2>}
         >
-            <Head title="Projects" />
+            <Head title="Task" />
             
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -71,7 +71,7 @@ const onKeyPress = (name, e)=> {
                                     <th className="px-3 py-3">
                                         <TextInput className="w-full" 
                                         defaulValue= {queryparams.name}
-                                        placeholder="Project Name" onBlur={e =>searchFieldChange('name', e.target.value)}
+                                        placeholder="Task Name" onBlur={e =>searchFieldChange('name', e.target.value)}
                                             onKeyPress={e => onKeyPress('name', e)}/>
                                     </th>  
                                     <th onClick={(e) => sortchange('id')}className="px-3 py-3">
@@ -91,31 +91,31 @@ const onKeyPress = (name, e)=> {
                                 </tr>
                             </thead>
                             <tbody>
-                                {projects.data && projects.data.length > 0 ? (
-                                    projects.data.map((project) => (
-                                        <tr key={project.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                            <td className="px-3 py-2">{project.id}</td>
+                                {TASK_STATUS_TEXT_MAP.data && tasks.data.length > 0 ? (
+                                    tasks.data.map((task) => (
+                                        <tr key={task.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                            <td className="px-3 py-2">{task.id}</td>
                                             <td className="px-3 py-2">
-                                                <img src={project.image_path}onClick={(e) => sortchange('id')} style={{ width: 60 }} alt="" />
+                                                <img src={task.image_path}onClick={(e) => sortchange('id')} style={{ width: 60 }} alt="" />
                                             </td>
-                                            <td className="px-3 py-2">{project.name}</td>
+                                            <td className="px-3 py-2">{task.name}</td>
                                             <td className="px-3 py-2">
-                                                <span className={"px-2 py-1 rounded text-white " + PROJECT_STATUS_CLASS_MAP[project.status]}>
-                                                    {PROJECT_STATUS_TEXT_MAP[project.status]}
+                                                <span className={"px-2 py-1 rounded text-white " + TASK_STATUS_CLASS_MAP[task.status]}>
+                                                    {TASK_STATUS_TEXT_MAP[task.status]}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-2">{project.created_at}</td>
-                                            <td className="px-3 py-2">{project.due_date}</td>
-                                            <td className="px-3 py-2">{project.createdBy.name}</td>
+                                            <td className="px-3 py-2">{task.created_at}</td>
+                                            <td className="px-3 py-2">{task.due_date}</td>
+                                            <td className="px-3 py-2">{task.createdBy.name}</td>
                                             <td className="px-3 py-2">
-                                                <Link href={route('project.edit', project.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1">Edit</Link>
-                                                <Link href={route('project.destroy', project.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1">Delete</Link>
+                                                <Link href={route('task.edit', task.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1">Edit</Link>
+                                                <Link href={route('task.destroy', task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1">Delete</Link>
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="8" className="text-center py-2">No project available</td>
+                                        <td colSpan="8" className="text-center py-2">No task available</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -131,7 +131,7 @@ const onKeyPress = (name, e)=> {
                                             {link.label}
                                         </a>
                                     ))}
-                                    <pre>{JSON.stringify(projects, undefined, 2)}</pre>
+                                    <pre>{JSON.stringify(tasks, undefined, 2)}</pre>
                                 </div>
                             )}
                         </div>
